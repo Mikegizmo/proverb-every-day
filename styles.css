@@ -1,0 +1,112 @@
+:root {
+  --parchment: #c8ad7f;
+  --parchment-ink: #3b2f1b;
+  --parchment-ink-soft: #5a4630;
+  --edge: #9b7d4a;
+  --edge-dark: #7a5f38;
+  --focus: #c29b5a;
+  --radius: 22px;
+}
+
+body {
+  margin: 0;
+  color: var(--parchment-ink);
+  /* parchment texture overlay + soft gradients */
+  background:
+    url("images/parchment.jpg"),
+    radial-gradient(1000px 700px at 30% 20%, rgba(0,0,0,0.035), transparent 60%),
+    radial-gradient(900px 600px at 70% 80%, rgba(0,0,0,0.025), transparent 60%),
+    linear-gradient(#fdf6e3, #f7edd6 40%, #fdf6e3);
+  font-family: "EB Garamond", "Cormorant Garamond", Georgia, serif;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.shell {
+  display: grid;
+  grid-template-areas:
+    "top top top"
+    "left center right"
+    "bottom bottom bottom";
+  grid-template-columns: auto 1fr auto;
+  grid-template-rows: auto 1fr auto;
+  gap: 0.5rem;
+  width: min(95vw, 900px);
+  height: min(95vh, 700px);
+}
+
+.rail {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.top { grid-area: top; }
+.bottom { grid-area: bottom; }
+.left { grid-area: left; flex-direction: column; }
+.right { grid-area: right; flex-direction: column; }
+
+.panel {
+  grid-area: center;
+  background: var(--parchment);
+  border: 4px solid var(--edge);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  box-shadow: 0 0 20px rgba(0,0,0,0.25) inset, 2px 2px 10px rgba(0,0,0,0.2);
+  overflow-y: auto;
+  line-height: 1.6;
+  max-height: 100%;
+}
+
+.panel h1 {
+  font-family: "Uncial Antiqua", "EB Garamond", Georgia, serif;
+  font-size: 1.8rem;
+  margin-top: 0;
+  color: var(--parchment-ink-soft);
+}
+
+.panel p {
+  margin: 0.5rem 0;
+}
+
+.number {
+  background: var(--edge);
+  color: #fffaf0;
+  font-family: "Uncial Antiqua", "EB Garamond", Georgia, serif;
+  font-size: 1.2rem;
+  padding: 0.4rem 0.6rem;
+  margin: 0.15rem;
+  border: 2px solid var(--edge-dark);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.number:hover,
+.number:focus {
+  background: var(--focus);
+  outline: none;
+}
+
+.number[aria-current="true"] {
+  background: var(--parchment-ink-soft);
+}
+
+.fadein {
+  animation: fadein 0.6s ease;
+}
+@keyframes fadein {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  .rail.top, .rail.bottom {
+    gap: 0.25rem;
+  }
+  .rail.left, .rail.right {
+    gap: 0.25rem;
+  }
+}
