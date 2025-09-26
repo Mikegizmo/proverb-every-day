@@ -18,20 +18,20 @@ fetch(`${apiUrl}/1.json`)
         // console.log(chapter.chapter.content[2].content[0].text);
 
         for(i=0; i<chapter.chapter.content.length; i++) {
-          // if (chapter.chapter.content[i].type === 'heading') {
-          //   console.log(chapter.chapter.content[i].content[0]);
-          //   console.log(chapter.chapter.content[i].type);
-          //   if(chapter.chapter.content[i].type !== 'line_break'){
-          //     console.log(chapter.chapter.content[i].content.length);
-          //   }
+          if (chapter.chapter.content[i].type === 'heading') {
+            console.log(chapter.chapter.content[i].content[0]);
             console.log(chapter.chapter.content[i].type);
-            console.log(`<sup>${chapter.chapter.content[i].number}</sup>`);
-            if(chapter.chapter.content[i].type === 'verse') {
-              for(j=0; j<chapter.chapter.content[i].content.length; j++) {
-                console.log(chapter.chapter.content[i].content[j].text);
-              }
-            }
+            // if(chapter.chapter.content[i].type !== 'line_break'){
+            //   console.log(chapter.chapter.content[i].content.length);
+            // }
+            // console.log(chapter.chapter.content[i].type);
+            // console.log(`<sup>${chapter.chapter.content[i].number}</sup>`);
+            // if(chapter.chapter.content[i].type === 'verse') {
+            //   for(j=0; j<chapter.chapter.content[i].content.length; j++) {
+            //     console.log(chapter.chapter.content[i].content[j].text);
+            //   }
+            // }
           }
           
         }
-    );
+    });

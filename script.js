@@ -28,10 +28,23 @@ function showProverb(number) {
 
 // click events
 numbers.forEach(number => {
-  number.addEventListener("click", () => {
+  number.addEventListener("click", async () => {
     numbers.forEach(l => l.removeAttribute("aria-current"));
     number.setAttribute("aria-current", "true");
-    showProverb(number.textContent);
+    const num = number.innerHTML;
+    console.log(num);
+    panel.innerHTML = "<p>Loading...</p>";
+    
+     try {
+      const res = await fetch(`https://bible.helloao.org/api/BSB/PRO/${num}.json`);
+      if (!res.ok) throw new Error("Network response was not ok");
+      const data = await res.json();
+      console.log(data);
+
+      renderProverb(data);
+    } catch (err) {
+      panel.innerHTML = `<p style="color:red;">Error: ${err.message}</p>`;
+    }
   });
 });
 
@@ -52,14 +65,73 @@ document.addEventListener("keydown", e => {
     getNumberButton(clockwiseOrder[index]).click();
   }
 
-  const letter = e.key.toUpperCase();
-  if (proverbs[letter]) {
-    const target = getNumberButton(letter);
-    if (target) target.click();
-  }
+  // const letter = e.key.toUpperCase();
+  // if (proverbs[letter]) {
+  //   const target = getNumberButton(letter);
+  //   if (target) target.click();
+  // }
 });
 
+function renderProverb(data) {
+  output.innerHTML = ""; // clear
+
+  data.forEach(item => {
+    if (item.type === "heading") {
+      const h1 = document.createElement("h1");
+      h1.textContent = item.content.join(" ");
+      output.appendChild(h1);
+    } 
+    else if (item.type === "verse") {
+      const p = document.createElement("p");
+      p.textContent = item.number + ". " + item.content.map(c => c.text).join(" ");
+      output.appendChild(p);
+    } 
+    else if (item.type === "lineBreak") {
+      output.appendChild(document.createElement("br"));
+    }
+  });
+}
+
+// const apiUrl = "https://bible.helloao.org/api/BSB/PRO";
+
+// fetch(`${apiUrl}/1.json`)
+//     .then(request => request.json())
+//     .then(chapter => {
+//         console.log('Proverbs 1(BSB)', chapter.chapter.content);
+//         console.log(chapter.chapter.content.length);
+//         console.log(chapter.chapter.content[1].type === 'verse');
+
+//         // console.log(chapter.chapter.content[1].content[0].text);
+//         // console.log(chapter.chapter.content[1].content[1].text);
+//         // console.log(chapter.chapter.content[2].content[0].text);
+
+//         for(i=0; i<chapter.chapter.content.length; i++) {
+//           if (chapter.chapter.content[i].type === 'heading') {
+//             console.log(chapter.chapter.content[i].content[0]);
+
+//             let heading = chapter.chapter.content[i].content[0];
+//             panel.innerHTML = `${heading}`;
+//             console.log(chapter.chapter.content[i].type);
+//             // if(chapter.chapter.content[i].type !== 'line_break'){
+//             //   console.log(chapter.chapter.content[i].content.length);
+//             // }
+//             // console.log(chapter.chapter.content[i].type);
+//             // console.log(`<sup>${chapter.chapter.content[i].number}</sup>`);
+//             // if(chapter.chapter.content[i].type === 'verse') {
+//             //   for(j=0; j<chapter.chapter.content[i].content.length; j++) {
+//             //     console.log(chapter.chapter.content[i].content[j].text);
+//             //   }
+//             // }
+//           }
+          
+//         }
+//     });
+
 // load instructions first
-panel.innerHTML = `<h1>Proverb Every Day</h1>
-        <p>Click or tap a number to reveal the corresponding Proverb. Use arrow keys to move clockwise or counter-clockwise around the letters. Screen readers will announce the
-        active content.</p>`;
+// panel.innerHTML = `<h1>Proverb Every Day</h1>
+//         <p>Click or tap a number to reveal the corresponding Proverb. Use arrow keys to move clockwise or counter-clockwise around the letters. Screen readers will announce the
+//         active content.</p>`;
+// const heading = "chapter.chapter.content[0].content[0]";
+// panel.innerHTML = `Proverbs 1(BSB): 
+//           ${heading[0]}
+//           `
