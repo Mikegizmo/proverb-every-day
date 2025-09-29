@@ -87,11 +87,11 @@ function renderProverb(data) {
       h2.textContent = item.content[0];
       panel.appendChild(h2);
     } 
-    // else if (item.type === "verse") {
-    //   const p = document.createElement("p");
-    //   p.textContent = item.number + ". " + item.content.map(c => c.text).join(" ");
-    //   output.appendChild(p);
-    // } 
+    else if (item.type === "verse") {
+      const p = document.createElement("p");
+      p.innerHTML = `<sup><strong>${item.number}</strong></sup> ` + item.content.map(c => c.text + "<br>").join(" ");
+      panel.appendChild(p);
+    } 
     else if (item.type === "lineBreak") {
       panel.appendChild(document.createElement("br"));
     }
