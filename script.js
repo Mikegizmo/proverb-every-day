@@ -40,6 +40,7 @@ numbers.forEach(number => {
       if (!res.ok) throw new Error("Network response was not ok");
       const data = await res.json();
       console.log(data);
+      console.log(data.chapter.number);
 
       renderProverb(data);
     } catch (err) {
@@ -73,21 +74,26 @@ document.addEventListener("keydown", e => {
 });
 
 function renderProverb(data) {
-  output.innerHTML = ""; // clear
+  const proverbNumber = data.chapter.number;
+  console.log(proverbNumber);
+  panel.innerHTML = `<h1>Proverb ${proverbNumber}</h1>`;
 
-  data.forEach(item => {
+  const proverbContent = data.chapter.content;
+  console.log(proverbContent);
+
+  proverbContent.forEach(item => {
     if (item.type === "heading") {
-      const h1 = document.createElement("h1");
-      h1.textContent = item.content.join(" ");
-      output.appendChild(h1);
+      const h2 = document.createElement("h2");
+      h2.textContent = item.content[0];
+      panel.appendChild(h2);
     } 
-    else if (item.type === "verse") {
-      const p = document.createElement("p");
-      p.textContent = item.number + ". " + item.content.map(c => c.text).join(" ");
-      output.appendChild(p);
-    } 
+    // else if (item.type === "verse") {
+    //   const p = document.createElement("p");
+    //   p.textContent = item.number + ". " + item.content.map(c => c.text).join(" ");
+    //   output.appendChild(p);
+    // } 
     else if (item.type === "lineBreak") {
-      output.appendChild(document.createElement("br"));
+      panel.appendChild(document.createElement("br"));
     }
   });
 }
