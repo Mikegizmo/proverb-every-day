@@ -89,7 +89,11 @@ function renderProverb(data) {
     } 
     else if (item.type === "verse") {
       const p = document.createElement("p");
-      p.innerHTML = `<sup><strong>${item.number}</strong></sup> ` + item.content.map(c => c.text + "<br>").join(" ");
+      const verseText = item.content
+        .filter(c => c.text)
+        .map(c => c.text + "<br>").join(" ");
+
+      p.innerHTML = `<sup><strong>${item.number}</strong></sup> ` + verseText;
       panel.appendChild(p);
     } 
     else if (item.type === "lineBreak") {
