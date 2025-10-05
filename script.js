@@ -8,22 +8,9 @@ const clockwiseOrder = [
 const numbers = document.querySelectorAll(".number");
 const panel = document.getElementById("panel");
 
-// helper to find letter by text
+// helper to find number by text
 function getNumberButton(number) {
   return Array.from(numbers).find(l => l.textContent === number);
-}
-
-function showProverb(number) {
-  const data = proverbs[number];
-  console.log(data);
-  if (data) {
-    panel.innerHTML = `
-      <h1>Proverbs ${number}</h1>
-      <h3>${data.text}</h3>
-    `;
-  } else {
-    panel.innerHTML = `<p>Click a number to see the corresponding Proverb.</p>`;
-  }
 }
 
 // click events
@@ -65,18 +52,45 @@ document.addEventListener("keydown", e => {
     index = (index - 1 + clockwiseOrder.length) % clockwiseOrder.length;
     getNumberButton(clockwiseOrder[index]).click();
   }
-
-  // const letter = e.key.toUpperCase();
-  // if (proverbs[letter]) {
-  //   const target = getNumberButton(letter);
-  //   if (target) target.click();
-  // }
 });
+
+function extractTexts(node) {
+  if (node == null) return [];            // null/undefined
+  if (typeof node === 'string') return [node];
+  if (Array.isArray(node)) return node.flatMap(extractTexts);
+
+  // node is an object
+  if (typeof node === 'object') {
+    // Prefer explicit text/content properties
+    if (typeof node.text === 'string') return [node.text];
+    if (typeof node.content === 'string') return [node.content];
+    if (Array.isArray(node.content)) return extractTexts(node.content);
+
+    // If object has nested content-like items (rare), attempt to gather them,
+    // but DO NOT grab noteId (we intentionally ignore it).
+    const collected = [];
+    for (const key of Object.keys(node)) {
+      if (key === 'noteId') continue;          // skip notes
+      const val = node[key];
+      if (typeof val === 'string') {
+        // avoid grabbing short id-like strings by only grabbing longish text?
+        // (optional) here we include it — but normally text/content will cover cases.
+        // If you want to be stricter, remove this block.
+        collected.push(val);
+      } else if (Array.isArray(val) || typeof val === 'object') {
+        collected.push(...extractTexts(val));
+      }
+    }
+    return collected;
+  }
+
+  return [];
+}
 
 function renderProverb(data) {
   const proverbNumber = data.chapter.number;
   console.log(proverbNumber);
-  panel.innerHTML = `<h1>Proverb ${proverbNumber}</h1>`;
+  panel.innerHTML = `<h1>Proverbs ${proverbNumber}</h1>`;
 
   const proverbContent = data.chapter.content;
   console.log(proverbContent);
@@ -84,15 +98,16 @@ function renderProverb(data) {
   proverbContent.forEach(item => {
     if (item.type === "heading") {
       const h2 = document.createElement("h2");
-      h2.textContent = item.content[0];
+      const headingParts = extractTexts(item.content);
+      h2.textContent = headingParts.join(" ") || (Array.isArray(item.content) ? item.content.join(" ") : String(item.content || ""));
       panel.appendChild(h2);
     } 
     else if (item.type === "verse") {
       const p = document.createElement("p");
-      const verseText = item.content
-        .filter(c => c.text)
-        .map(c => c.text + "<br>").join(" ");
-
+      // Use extractTexts so single-item content / nested content still yields text
+      const verseParts = extractTexts(item.content);
+      const verseText = verseParts.join("<br>").trim();
+      // Prepend verse number if present
       p.innerHTML = `<sup><strong>${item.number}</strong></sup> ` + verseText;
       panel.appendChild(p);
     } 
@@ -102,46 +117,12 @@ function renderProverb(data) {
   });
 }
 
-// const apiUrl = "https://bible.helloao.org/api/BSB/PRO";
-
-// fetch(`${apiUrl}/1.json`)
-//     .then(request => request.json())
-//     .then(chapter => {
-//         console.log('Proverbs 1(BSB)', chapter.chapter.content);
-//         console.log(chapter.chapter.content.length);
-//         console.log(chapter.chapter.content[1].type === 'verse');
-
-//         // console.log(chapter.chapter.content[1].content[0].text);
-//         // console.log(chapter.chapter.content[1].content[1].text);
-//         // console.log(chapter.chapter.content[2].content[0].text);
-
-//         for(i=0; i<chapter.chapter.content.length; i++) {
-//           if (chapter.chapter.content[i].type === 'heading') {
-//             console.log(chapter.chapter.content[i].content[0]);
-
-//             let heading = chapter.chapter.content[i].content[0];
-//             panel.innerHTML = `${heading}`;
-//             console.log(chapter.chapter.content[i].type);
-//             // if(chapter.chapter.content[i].type !== 'line_break'){
-//             //   console.log(chapter.chapter.content[i].content.length);
-//             // }
-//             // console.log(chapter.chapter.content[i].type);
-//             // console.log(`<sup>${chapter.chapter.content[i].number}</sup>`);
-//             // if(chapter.chapter.content[i].type === 'verse') {
-//             //   for(j=0; j<chapter.chapter.content[i].content.length; j++) {
-//             //     console.log(chapter.chapter.content[i].content[j].text);
-//             //   }
-//             // }
-//           }
-          
-//         }
-//     });
+const today = new Date();
+const day = today.getDate();
+console.log(day);
 
 // load instructions first
-// panel.innerHTML = `<h1>Proverb Every Day</h1>
-//         <p>Click or tap a number to reveal the corresponding Proverb. Use arrow keys to move clockwise or counter-clockwise around the letters. Screen readers will announce the
-//         active content.</p>`;
-// const heading = "chapter.chapter.content[0].content[0]";
-// panel.innerHTML = `Proverbs 1(BSB): 
-//           ${heading[0]}
-//           `
+panel.innerHTML = `<h1>Proverb Every Day</h1>
+        <p>Click or tap a number to reveal the corresponding Proverb. Use arrow keys to move clockwise or counter-clockwise around the letters. Screen readers will announce the
+        active content.</p>`;
+
