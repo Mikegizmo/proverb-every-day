@@ -121,8 +121,18 @@ const today = new Date();
 const day = today.getDate();
 console.log(day);
 
-// load instructions first
-panel.innerHTML = `<h1>Proverb Every Day</h1>
-        <p>Click or tap a number to reveal the corresponding Proverb. Use arrow keys to move clockwise or counter-clockwise around the letters. Screen readers will announce the
-        active content.</p>`;
+const proverbDay = document.getElementById("proverbDay");
+proverbDay.addEventListener("click", async () => {
+  try {
+    const res = await fetch(`https://bible.helloao.org/api/BSB/PRO/${day}.json`);
+    if (!res.ok) throw new Error("Network response was not ok");
+    const data = await res.json();
+    console.log(data);
+    console.log(data.chapter);
+
+    renderProverb(data);
+  } catch (err) {
+    panel.innerHTML = `<p style="color:red;">Error: ${err.message}</p>`;
+  }
+});
 
