@@ -138,4 +138,12 @@ proverbDay.addEventListener("click", async () => {
   }
 });
 
-console.log(popularProverbs);
+console.log(popularProverbs[3].text);
+
+function getRandomProverb() {
+  const randomProverb = Math.floor(Math.random() * popularProverbs.length);
+  console.log(randomProverb);
+  console.log(popularProverbs[randomProverb]);
+}
+
+getRandomProverb();
