@@ -121,7 +121,6 @@ function renderProverb(data) {
 
 const today = new Date();
 const day = today.getDate();
-console.log(day);
 
 const proverbDay = document.getElementById("proverbDay");
 proverbDay.addEventListener("click", async () => {
@@ -138,12 +137,16 @@ proverbDay.addEventListener("click", async () => {
   }
 });
 
-console.log(popularProverbs[3].text);
-
 function getRandomProverb() {
-  const randomProverb = Math.floor(Math.random() * popularProverbs.length);
-  console.log(randomProverb);
-  console.log(popularProverbs[randomProverb]);
+  const random = Math.floor(Math.random() * popularProverbs.length);
+  const randomProverb = popularProverbs[random].verse;
+  const randomProverbText = popularProverbs[random].text;
+  console.log(randomProverb, randomProverbText);
+  panel.innerHTML = `<h1>Proverbs ${randomProverb}</h1> 
+                     <p>${randomProverbText}</p>`;
 }
 
-getRandomProverb();
+const randomProverb = document.getElementById("randomProverb");
+randomProverb.addEventListener("click", () => {
+  getRandomProverb();
+})
