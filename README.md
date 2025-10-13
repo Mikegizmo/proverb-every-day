@@ -10,3 +10,4 @@ Similar set up as A to Z devotional. Allows user to click or tap a number to sho
 10/5/25 - Added button for Proverb of the Day which shows the proverb that corresponds to the date.  Next step is to create button for random popular verse. I will create a json file that has specific proverbs and the button click will randomize which proverb gets pulled from the json file.<br>
 10/8/25 - Added popularProverbs.js file to store popular Proverbs and importing into script.js file.  Next step to add more verses to popularProverbs and create a button to randomly choose from the array.<br>
 10/12/25 - Added button for Random Popular Proverbs. The button click pulls from the popularProverbs array and display the proverb to the screen.<br>
+10/13/25 - Added buttons to bottom of the screen after user selection so that the user can choose to start over, another random proverb, or the proverb of the day. Next step to add functionality to the buttons.<br>

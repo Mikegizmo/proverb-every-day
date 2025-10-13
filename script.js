@@ -1,10 +1,18 @@
 import { popularProverbs } from "./popularProverbs.js";
 
+const bottomButtons = document.getElementById("bottomButtons");
+
+const proverbDay = document.getElementById("proverbDay");
+const randomProverb = document.getElementById("randomProverb");
+const proverbDayBottom = document.getElementById("proverbDayBottom");
+const randomProverbBottom = document.getElementById("randomProverbBottom");
+const startOver = document.getElementById("startOver");
+
 const clockwiseOrder = [
   "1","2","3","4","5","6","7",     // top
-  "8","9","9","10","11","12","13","14","15", // right
+  "8","9","10","11","12","13","14","15", // right
   "16","17","18","19","20","21","22","23",     // bottom
-  "24","25","26","27","27","28","29","30","31"  // left
+  "24","25","26","27","28","29","30","31"  // left
 ];
 
 const numbers = document.querySelectorAll(".number");
@@ -21,21 +29,27 @@ numbers.forEach(number => {
     numbers.forEach(l => l.removeAttribute("aria-current"));
     number.setAttribute("aria-current", "true");
     const num = number.innerHTML;
-    console.log(num);
+    
     panel.innerHTML = "<p>Loading...</p>";
     
      try {
       const res = await fetch(`https://bible.helloao.org/api/BSB/PRO/${num}.json`);
       if (!res.ok) throw new Error("Network response was not ok");
       const data = await res.json();
-      console.log(data);
-      console.log(data.chapter.number);
-
+      
       renderProverb(data);
     } catch (err) {
       panel.innerHTML = `<p style="color:red;">Error: ${err.message}</p>`;
     }
   });
+});
+
+proverbDayBottom.addEventListener("click", () => {
+  
+})
+
+startOver.addEventListener("click", () => {
+  window.location.href = "/index.html";
 });
 
 // keyboard navigation
@@ -55,6 +69,11 @@ document.addEventListener("keydown", e => {
     getNumberButton(clockwiseOrder[index]).click();
   }
 });
+
+function showBottomButtons() {
+  bottomButtons.classList.add("visible");
+  panel.appendChild(bottomButtons);
+};
 
 function extractTexts(node) {
   if (node == null) return [];            // null/undefined
@@ -91,11 +110,9 @@ function extractTexts(node) {
 
 function renderProverb(data) {
   const proverbNumber = data.chapter.number;
-  console.log(proverbNumber);
   panel.innerHTML = `<h1>Proverbs ${proverbNumber}</h1>`;
 
   const proverbContent = data.chapter.content;
-  console.log(proverbContent);
 
   proverbContent.forEach(item => {
     if (item.type === "heading") {
@@ -117,20 +134,19 @@ function renderProverb(data) {
       panel.appendChild(document.createElement("br"));
     }
   });
+
+  showBottomButtons();
 }
 
 const today = new Date();
 const day = today.getDate();
 
-const proverbDay = document.getElementById("proverbDay");
 proverbDay.addEventListener("click", async () => {
   try {
     const res = await fetch(`https://bible.helloao.org/api/BSB/PRO/${day}.json`);
     if (!res.ok) throw new Error("Network response was not ok");
     const data = await res.json();
-    console.log(data);
-    console.log(data.chapter);
-
+  
     renderProverb(data);
   } catch (err) {
     panel.innerHTML = `<p style="color:red;">Error: ${err.message}</p>`;
@@ -141,12 +157,14 @@ function getRandomProverb() {
   const random = Math.floor(Math.random() * popularProverbs.length);
   const randomProverb = popularProverbs[random].verse;
   const randomProverbText = popularProverbs[random].text;
-  console.log(randomProverb, randomProverbText);
+  
   panel.innerHTML = `<h1>Proverbs ${randomProverb}</h1> 
                      <p>${randomProverbText}</p>`;
+
+  showBottomButtons();
 }
 
-const randomProverb = document.getElementById("randomProverb");
 randomProverb.addEventListener("click", () => {
   getRandomProverb();
-})
+});
+

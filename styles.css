@@ -18,7 +18,7 @@ body {
     radial-gradient(900px 600px at 70% 80%, rgba(0,0,0,0.025), transparent 60%),
     linear-gradient(#fdf6e3, #f7edd6 40%, #fdf6e3);
   font-family: "EB Garamond", "Cormorant Garamond", Georgia, serif;
-  min-height: 100svh;
+  min-height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -49,7 +49,7 @@ body {
 .right { grid-area: right; flex-direction: column; }
 
 .panel {
-  grid-area: center;
+  /* grid-area: center; */
   background: var(--parchment);
   border: 4px solid var(--edge);
   border-radius: var(--radius);
@@ -58,17 +58,22 @@ body {
   overflow-y: auto;
   line-height: 1.6;
   max-height: 100%;
+  position: relative;
 }
 
 .panel h1 {
   font-family: "Uncial Antiqua", "EB Garamond", Georgia, serif;
-  font-size: 1.8rem;
+  font-size: 2.25rem;
   margin-top: 0;
   color: var(--parchment-ink-soft);
+}
+.panel h2 {
+  font-size: 1.7rem;
 }
 
 .panel p {
   margin: 0.5rem 0;
+  font-size: 1.2rem;
 }
 
 .number {
@@ -99,6 +104,7 @@ body {
   color: #fffaf0;
   font-family: "Uncial Antiqua", "EB Garamond", Georgia, serif;
   font-size: 1.2rem;
+  width: 35%;
   padding: 0.4rem 0.6rem;
   margin: 0.15rem;
   border: 2px solid var(--edge-dark);
@@ -111,6 +117,21 @@ body {
 .button:hover {
   background: var(--focus);
   outline: none;
+}
+
+#bottomButtons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+#bottomButtons.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .fadein {
