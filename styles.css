@@ -18,7 +18,8 @@ body {
     radial-gradient(900px 600px at 70% 80%, rgba(0,0,0,0.025), transparent 60%),
     linear-gradient(#fdf6e3, #f7edd6 40%, #fdf6e3);
   font-family: "EB Garamond", "Cormorant Garamond", Georgia, serif;
-  min-height: 100svh;
+  height: 100vh;
+  height: 100svh;
   display: flex;
   align-items: center;
   justify-content: center;
