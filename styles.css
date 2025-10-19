@@ -23,7 +23,7 @@ body {
     linear-gradient(#fdf6e3, #f7edd6 40%, #fdf6e3);
   font-family: "EB Garamond", "Cormorant Garamond", Georgia, serif;
   height: 100vh;
-  height: 100svh;
+  /* height: 100svh; */
   display: flex;
   align-items: center;
   justify-content: center;

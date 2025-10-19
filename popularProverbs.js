@@ -9,7 +9,7 @@ export const popularProverbs = [
   },
   {
     "verse": "1:5",
-    "text": "Let the wise listen and gain instruction,<br>and the discerning acquire wise counsel"
+    "text": "Let the wise listen and gain instruction,<br>and the discerning acquire wise counsel."
   },
   {
     "verse": "16:18",

@@ -138,12 +138,11 @@ function renderProverb(data) {
   showBottomButtons();
 }
 
-const today = new Date();
-const day = today.getDate();
+async function getDailyProverb() {
+  const today = new Date().getDate();
 
-proverbDay.addEventListener("click", async () => {
   try {
-    const res = await fetch(`https://bible.helloao.org/api/BSB/PRO/${day}.json`);
+    const res = await fetch(`https://bible.helloao.org/api/BSB/PRO/${today}.json`);
     if (!res.ok) throw new Error("Network response was not ok");
     const data = await res.json();
   
@@ -151,7 +150,7 @@ proverbDay.addEventListener("click", async () => {
   } catch (err) {
     panel.innerHTML = `<p style="color:red;">Error: ${err.message}</p>`;
   }
-});
+};
 
 function getRandomProverb() {
   const random = Math.floor(Math.random() * popularProverbs.length);
@@ -162,9 +161,20 @@ function getRandomProverb() {
                      <p>${randomProverbText}</p>`;
 
   showBottomButtons();
-}
+};
+
+proverbDay.addEventListener("click", () => {
+  getDailyProverb();
+});
+
+proverbDayBottom.addEventListener("click", () => {
+  getDailyProverb();
+})
 
 randomProverb.addEventListener("click", () => {
   getRandomProverb();
 });
 
+randomProverbBottom.addEventListener("click", () => {
+  getRandomProverb();
+});
