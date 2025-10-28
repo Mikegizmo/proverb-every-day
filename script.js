@@ -1,78 +1,76 @@
+// imports
 import { popularProverbs } from "./popularProverbs.js";
+import { railsWideScreen } from "./uilayout/railsWideScreen.js";
+import { railsMobile } from "./uilayout/railsMobile.js";
 
-const bottomButtons = document.getElementById("bottomButtons");
+// constants
+const railTop = document.getElementById("rail-top");
+const railRight = document.getElementById("rail-right");
+const railBottom = document.getElementById("rail-bottom");
+const railLeft = document.getElementById("rail-left");
 
+const panel = document.getElementById("panel");
 const proverbDay = document.getElementById("proverbDay");
 const randomProverb = document.getElementById("randomProverb");
+
+const bottomButtons = document.getElementById("bottomButtons");
 const proverbDayBottom = document.getElementById("proverbDayBottom");
 const randomProverbBottom = document.getElementById("randomProverbBottom");
 const startOver = document.getElementById("startOver");
+const userHelper = document.createElement("div");
+userHelper.innerHTML = "<p>Click or tap a number to reveal the corresponding Proverb.</p>";
 
-const clockwiseOrder = [
-  "1","2","3","4","5","6","7",     // top
-  "8","9","10","11","12","13","14","15", // right
-  "16","17","18","19","20","21","22","23",     // bottom
-  "24","25","26","27","28","29","30","31"  // left
-];
+function checkViewportWidth() {
+  const viewportWidth = window.innerWidth;
+  const screenOrientation = screen.orientation.type;
+  console.log(viewportWidth);
+  console.log(screenOrientation);
+  let railsForUi;
 
-const numbers = document.querySelectorAll(".number");
-const panel = document.getElementById("panel");
+  if (viewportWidth > 1000 && screenOrientation === "landscape-primary") {
+    railsForUi = railsWideScreen;
+    railTop.innerHTML = railsForUi.railsTopWideScreen;
+    railRight.innerHTML = railsForUi.railsRightWideScreen;
+    railBottom.innerHTML = railsForUi.railsBottomWideScreen;
+    railLeft.innerHTML = railsForUi.railsLeftWideScreen;
 
-// helper to find number by text
-function getNumberButton(number) {
-  return Array.from(numbers).find(l => l.textContent === number);
-}
-
-// click events
-numbers.forEach(number => {
-  number.addEventListener("click", async () => {
-    numbers.forEach(l => l.removeAttribute("aria-current"));
-    number.setAttribute("aria-current", "true");
-    const num = number.innerHTML;
+    let numbers = document.querySelectorAll(".number");
+    buttonClickCheck(numbers);
     
-    panel.innerHTML = "<p>Loading...</p>";
-    
-     try {
-      const res = await fetch(`https://bible.helloao.org/api/BSB/PRO/${num}.json`);
-      if (!res.ok) throw new Error("Network response was not ok");
-      const data = await res.json();
+  } else {
+    railsForUi = railsMobile;
+    railTop.innerHTML = railsForUi.railsTopMobile;
+    railRight.innerHTML = railsForUi.railsRightMobile;
+    railBottom.innerHTML = railsForUi.railsBottomMobile;
+    railLeft.innerHTML = railsForUi.railsLeftMobile;
+
+    let numbers = document.querySelectorAll(".number");
+    buttonClickCheck(numbers);
+  }
+};
+
+checkViewportWidth();
+
+function buttonClickCheck(numbers) {
+  numbers.forEach(number => {
+    number.addEventListener("click", async () => {
+      numbers.forEach(l => l.removeAttribute("aria-current"));
+      number.setAttribute("aria-current", "true");
+      const num = number.innerHTML;
       
-      renderProverb(data);
-    } catch (err) {
-      panel.innerHTML = `<p style="color:red;">Error: ${err.message}</p>`;
-    }
+      panel.innerHTML = "<p>Loading...</p>";
+      
+      try {
+        const res = await fetch(`https://bible.helloao.org/api/BSB/PRO/${num}.json`);
+        if (!res.ok) throw new Error("Network response was not ok");
+        const data = await res.json();
+        
+        renderProverb(data);
+      } catch (err) {
+        panel.innerHTML = `<p style="color:red;">Error: ${err.message}</p>`;
+      }
+    });
   });
-});
-
-proverbDayBottom.addEventListener("click", () => {
-  
-})
-
-startOver.addEventListener("click", () => {
-  window.location.href = "/index.html";
-});
-
-// keyboard navigation
-document.addEventListener("keydown", e => {
-  const current = document.querySelector(".number[aria-current='true']");
-  const currentNumber = current ? current.textContent : null;
-  let index = clockwiseOrder.indexOf(currentNumber);
-
-  if (e.key === "ArrowRight" || e.key === "ArrowUp") {
-    e.preventDefault();
-    index = (index + 1) % clockwiseOrder.length;
-    getNumberButton(clockwiseOrder[index]).click();
-  }
-  if (e.key === "ArrowLeft" || e.key === "ArrowDown") {
-    e.preventDefault();
-    index = (index - 1 + clockwiseOrder.length) % clockwiseOrder.length;
-    getNumberButton(clockwiseOrder[index]).click();
-  }
-});
-
-function showBottomButtons() {
-  bottomButtons.classList.add("visible");
-  panel.appendChild(bottomButtons);
 };
 
 function extractTexts(node) {
@@ -163,18 +161,32 @@ function getRandomProverb() {
   showBottomButtons();
 };
 
+function showBottomButtons() {
+  bottomButtons.classList.add("visible");
+  panel.appendChild(bottomButtons);
+  panel.appendChild(userHelper);
+};
+
+// event listeners
 proverbDay.addEventListener("click", () => {
   getDailyProverb();
 });
-
-proverbDayBottom.addEventListener("click", () => {
-  getDailyProverb();
-})
 
 randomProverb.addEventListener("click", () => {
   getRandomProverb();
 });
 
+proverbDayBottom.addEventListener("click", () => {
+  panel.innerHTML = "<p>Loading...</p>";
+  getDailyProverb();
+});
+
 randomProverbBottom.addEventListener("click", () => {
   getRandomProverb();
 });
+
+startOver.addEventListener("click", () => {
+  window.location.href = "/index.html";
+});
+
+window.addEventListener("resize", checkViewportWidth);

@@ -127,8 +127,8 @@ body {
 #bottomButtons {
   display: flex;
   justify-content: center;
-  gap: 10px;
-  margin-top: 20px;
+  gap: 0.5rem;
+  margin-top: 1rem;
   opacity: 0;
   transform: translateY(10px);
   transition: opacity 0.6s ease, transform 0.6s ease;
@@ -160,9 +160,16 @@ body {
   .rail.left, .rail.right {
     gap: 0.25rem;
   }
+  .panel h1 {
+    font-size: 1.75rem;
+  }
+  .panel h2 {
+    font-size: 1.5rem;
+  }
   button {
     width: 100%;
     max-width: 250px;
+    margin-top: 1rem;
   }
   #bottomButtons,
   #topButtons {
@@ -172,6 +179,6 @@ body {
   #bottomButtons button,
   #topButtons button {
     width: 100%;
-    max-width: 250px;
+    max-width: 15rem;
   }
 }
