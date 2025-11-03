@@ -14,3 +14,4 @@ Similar set up as A to Z devotional. Allows user to click or tap a number to sho
 10/14/25 - Adjusted css for mobile so buttons look better.  Stacked them on mobile instead of side-by-side beacuse they looked squashed.<br>
 10/18/25 - Added functionality to bottom buttons.  UI on iPhone with Chrome is partially hidden by toolbar.  Next step to get UI to look right on mobile.<br>
 10/27/25 - Changed up file structure so UI would have mobile and widescreen options.  Created railsMobile.js and railsWideScreen.js files. This should help the UI look better on mobile.<br>
+11/2/25 - Added audio player so user could listen to Proverb.<br>

@@ -110,8 +110,25 @@ function renderProverb(data) {
   const proverbNumber = data.chapter.number;
   panel.innerHTML = `<h1>Proverbs ${proverbNumber}</h1>`;
 
-  const proverbContent = data.chapter.content;
+  // Add audio player if available
+  const audioUrl = data.thisChapterAudioLinks.hays;
+  if (audioUrl) {
+    const audioContainer = document.createElement("div");
+    audioContainer.style.textAlign = "center";
+    audioContainer.style.marginTop = "20px";
 
+    const audioPlayer = document.createElement("audio");
+    audioPlayer.controls = true;
+    audioPlayer.src = audioUrl;
+    audioPlayer.style.width = "100%";
+    audioPlayer.style.position = "sticky-top";
+    audioPlayer.style.maxWidth = "400px";
+    audioContainer.appendChild(audioPlayer);
+
+    panel.appendChild(audioContainer);
+  };
+
+  const proverbContent = data.chapter.content;
   proverbContent.forEach(item => {
     if (item.type === "heading") {
       const h2 = document.createElement("h2");
